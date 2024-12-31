@@ -1,0 +1,70 @@
+12/29/2024 21:05:59 - INFO - frame.my_frame -   log_path: result\2024-12-29_FewRel_daFalse_3_np20_ep1_5_ep2_5_seed2021_daType[0, 1, 2].txt
+12/29/2024 21:06:27 - INFO - frame.my_frame -   log_path: result\2024-12-29_FewRel_daFalse_3_np20_ep1_5_ep2_5_seed2021_daType[0, 1, 2].txt
+12/29/2024 21:06:27 - INFO - frame.my_frame -   hyper-parameter configurations:
+12/29/2024 21:06:27 - INFO - frame.my_frame -   {'gpu': 0, 'data_name': 'FewRel', 'task_name': 'FewRel', 'max_length': 256, 'this_name': 'continual', 'device': device(type='cuda'), 'batch_size': 16, 'learning_rate': 5e-06, 'total_round': 1, 'rel_per_task': 8, 'pattern': 'entity_marker', 'encoder_output_size': 768, 'vocab_size': 30522, 'marker_size': 4, 'temp': 0.1, 'feat_dim': 64, 'kl_temp': 10, 'num_workers': 0, 'step1_epochs': 5, 'step2_epochs': 5, 'seed': 2021, 'max_grad_norm': 10, 'num_protos': 20, 'optim': 'adam', 'data_path': 'dataset/', 'bert_path': 'H:\\2024-winter\\relationship\\MyModel\\bert-base-uncased', 'data_augmentation': False, 'result_path': 'result', 'n_gpu': 1, 'data_augmentation_type': [0, 1, 2], 'log_path': 'result\\2024-12-29_FewRel_daFalse_3_np20_ep1_5_ep2_5_seed2021_daType[0, 1, 2].txt'}
+12/29/2024 21:08:25 - INFO - frame.my_frame -   log_path: result\2024-12-29_FewRel_daFalse_3_np20_ep1_5_ep2_5_seed2021_daType[0, 1, 2].txt
+12/29/2024 21:08:25 - INFO - frame.my_frame -   hyper-parameter configurations:
+12/29/2024 21:08:25 - INFO - frame.my_frame -   {'gpu': 0, 'data_name': 'FewRel', 'task_name': 'FewRel', 'max_length': 256, 'this_name': 'continual', 'device': device(type='cuda'), 'batch_size': 16, 'learning_rate': 5e-06, 'total_round': 1, 'rel_per_task': 8, 'pattern': 'entity_marker', 'encoder_output_size': 768, 'vocab_size': 30522, 'marker_size': 4, 'temp': 0.1, 'feat_dim': 64, 'kl_temp': 10, 'num_workers': 0, 'step1_epochs': 5, 'step2_epochs': 5, 'seed': 2021, 'max_grad_norm': 10, 'num_protos': 20, 'optim': 'adam', 'data_path': 'dataset/', 'bert_path': 'H:\\2024-winter\\relationship\\MyModel\\bert-base-uncased', 'data_augmentation': False, 'result_path': 'result', 'n_gpu': 1, 'data_augmentation_type': [0, 1, 2], 'log_path': 'result\\2024-12-29_FewRel_daFalse_3_np20_ep1_5_ep2_5_seed2021_daType[0, 1, 2].txt'}
+12/29/2024 21:11:56 - INFO - frame.my_frame -   Restart Num 1
+12/29/2024 21:11:56 - INFO - frame.my_frame -   task--1:
+12/29/2024 21:11:56 - INFO - frame.my_frame -   current test acc:0.9883928571428572
+12/29/2024 21:11:56 - INFO - frame.my_frame -   history test acc:0.9883928571428572
+12/29/2024 21:11:56 - INFO - frame.my_frame -   [0.9883928571428572]
+12/29/2024 21:11:56 - INFO - frame.my_frame -   [0.9883928571428572]
+12/29/2024 21:16:16 - INFO - frame.my_frame -   Restart Num 1
+12/29/2024 21:16:16 - INFO - frame.my_frame -   task--2:
+12/29/2024 21:16:16 - INFO - frame.my_frame -   current test acc:0.9053571428571429
+12/29/2024 21:16:16 - INFO - frame.my_frame -   history test acc:0.9263392857142857
+12/29/2024 21:16:16 - INFO - frame.my_frame -   [0.9883928571428572, 0.9053571428571429]
+12/29/2024 21:16:16 - INFO - frame.my_frame -   [0.9883928571428572, 0.9263392857142857]
+12/29/2024 21:20:52 - INFO - frame.my_frame -   Restart Num 1
+12/29/2024 21:20:52 - INFO - frame.my_frame -   task--3:
+12/29/2024 21:20:52 - INFO - frame.my_frame -   current test acc:0.9741071428571428
+12/29/2024 21:20:52 - INFO - frame.my_frame -   history test acc:0.9330357142857143
+12/29/2024 21:20:52 - INFO - frame.my_frame -   [0.9883928571428572, 0.9053571428571429, 0.9741071428571428]
+12/29/2024 21:20:52 - INFO - frame.my_frame -   [0.9883928571428572, 0.9263392857142857, 0.9330357142857143]
+12/29/2024 21:25:47 - INFO - frame.my_frame -   Restart Num 1
+12/29/2024 21:25:47 - INFO - frame.my_frame -   task--4:
+12/29/2024 21:25:47 - INFO - frame.my_frame -   current test acc:0.9428571428571428
+12/29/2024 21:25:47 - INFO - frame.my_frame -   history test acc:0.9100446428571428
+12/29/2024 21:25:47 - INFO - frame.my_frame -   [0.9883928571428572, 0.9053571428571429, 0.9741071428571428, 0.9428571428571428]
+12/29/2024 21:25:47 - INFO - frame.my_frame -   [0.9883928571428572, 0.9263392857142857, 0.9330357142857143, 0.9100446428571428]
+12/29/2024 21:31:07 - INFO - frame.my_frame -   Restart Num 1
+12/29/2024 21:31:07 - INFO - frame.my_frame -   task--5:
+12/29/2024 21:31:07 - INFO - frame.my_frame -   current test acc:0.8955357142857143
+12/29/2024 21:31:07 - INFO - frame.my_frame -   history test acc:0.89125
+12/29/2024 21:31:07 - INFO - frame.my_frame -   [0.9883928571428572, 0.9053571428571429, 0.9741071428571428, 0.9428571428571428, 0.8955357142857143]
+12/29/2024 21:31:07 - INFO - frame.my_frame -   [0.9883928571428572, 0.9263392857142857, 0.9330357142857143, 0.9100446428571428, 0.89125]
+12/29/2024 21:36:47 - INFO - frame.my_frame -   Restart Num 1
+12/29/2024 21:36:47 - INFO - frame.my_frame -   task--6:
+12/29/2024 21:36:47 - INFO - frame.my_frame -   current test acc:0.9232142857142858
+12/29/2024 21:36:47 - INFO - frame.my_frame -   history test acc:0.8858630952380953
+12/29/2024 21:36:47 - INFO - frame.my_frame -   [0.9883928571428572, 0.9053571428571429, 0.9741071428571428, 0.9428571428571428, 0.8955357142857143, 0.9232142857142858]
+12/29/2024 21:36:47 - INFO - frame.my_frame -   [0.9883928571428572, 0.9263392857142857, 0.9330357142857143, 0.9100446428571428, 0.89125, 0.8858630952380953]
+12/29/2024 21:42:51 - INFO - frame.my_frame -   Restart Num 1
+12/29/2024 21:42:51 - INFO - frame.my_frame -   task--7:
+12/29/2024 21:42:51 - INFO - frame.my_frame -   current test acc:0.8517857142857143
+12/29/2024 21:42:51 - INFO - frame.my_frame -   history test acc:0.86875
+12/29/2024 21:42:51 - INFO - frame.my_frame -   [0.9883928571428572, 0.9053571428571429, 0.9741071428571428, 0.9428571428571428, 0.8955357142857143, 0.9232142857142858, 0.8517857142857143]
+12/29/2024 21:42:51 - INFO - frame.my_frame -   [0.9883928571428572, 0.9263392857142857, 0.9330357142857143, 0.9100446428571428, 0.89125, 0.8858630952380953, 0.86875]
+12/29/2024 21:49:19 - INFO - frame.my_frame -   Restart Num 1
+12/29/2024 21:49:19 - INFO - frame.my_frame -   task--8:
+12/29/2024 21:49:19 - INFO - frame.my_frame -   current test acc:0.8455357142857143
+12/29/2024 21:49:19 - INFO - frame.my_frame -   history test acc:0.8536830357142857
+12/29/2024 21:49:19 - INFO - frame.my_frame -   [0.9883928571428572, 0.9053571428571429, 0.9741071428571428, 0.9428571428571428, 0.8955357142857143, 0.9232142857142858, 0.8517857142857143, 0.8455357142857143]
+12/29/2024 21:49:19 - INFO - frame.my_frame -   [0.9883928571428572, 0.9263392857142857, 0.9330357142857143, 0.9100446428571428, 0.89125, 0.8858630952380953, 0.86875, 0.8536830357142857]
+12/29/2024 21:56:10 - INFO - frame.my_frame -   Restart Num 1
+12/29/2024 21:56:10 - INFO - frame.my_frame -   task--9:
+12/29/2024 21:56:10 - INFO - frame.my_frame -   current test acc:0.8991071428571429
+12/29/2024 21:56:10 - INFO - frame.my_frame -   history test acc:0.8494047619047619
+12/29/2024 21:56:10 - INFO - frame.my_frame -   [0.9883928571428572, 0.9053571428571429, 0.9741071428571428, 0.9428571428571428, 0.8955357142857143, 0.9232142857142858, 0.8517857142857143, 0.8455357142857143, 0.8991071428571429]
+12/29/2024 21:56:10 - INFO - frame.my_frame -   [0.9883928571428572, 0.9263392857142857, 0.9330357142857143, 0.9100446428571428, 0.89125, 0.8858630952380953, 0.86875, 0.8536830357142857, 0.8494047619047619]
+12/29/2024 22:03:28 - INFO - frame.my_frame -   Restart Num 1
+12/29/2024 22:03:28 - INFO - frame.my_frame -   task--10:
+12/29/2024 22:03:28 - INFO - frame.my_frame -   current test acc:0.8303571428571429
+12/29/2024 22:03:28 - INFO - frame.my_frame -   history test acc:0.8342857142857143
+12/29/2024 22:03:28 - INFO - frame.my_frame -   [0.9883928571428572, 0.9053571428571429, 0.9741071428571428, 0.9428571428571428, 0.8955357142857143, 0.9232142857142858, 0.8517857142857143, 0.8455357142857143, 0.8991071428571429, 0.8303571428571429]
+12/29/2024 22:03:28 - INFO - frame.my_frame -   [0.9883928571428572, 0.9263392857142857, 0.9330357142857143, 0.9100446428571428, 0.89125, 0.8858630952380953, 0.86875, 0.8536830357142857, 0.8494047619047619, 0.8342857142857143]
+12/29/2024 23:00:25 - INFO - frame.my_frame -   log_path: result\2024-12-29_FewRel_daFalse_3_np20_ep1_5_ep2_5_seed2021_daType[0, 1, 2].txt
+12/29/2024 23:00:25 - INFO - frame.my_frame -   hyper-parameter configurations:
+12/29/2024 23:00:25 - INFO - frame.my_frame -   {'gpu': 0, 'data_name': 'FewRel', 'task_name': 'FewRel', 'max_length': 256, 'this_name': 'continual', 'device': device(type='cuda'), 'batch_size': 16, 'learning_rate': 5e-06, 'total_round': 1, 'rel_per_task': 8, 'pattern': 'entity_marker', 'encoder_output_size': 768, 'vocab_size': 30522, 'marker_size': 4, 'temp': 0.1, 'feat_dim': 64, 'kl_temp': 10, 'num_workers': 0, 'step1_epochs': 5, 'step2_epochs': 5, 'seed': 2021, 'max_grad_norm': 10, 'num_protos': 20, 'optim': 'adam', 'data_path': 'dataset/', 'bert_path': 'H:\\2024-winter\\relationship\\MyModel\\bert-base-uncased', 'data_augmentation': False, 'result_path': 'result', 'n_gpu': 1, 'data_augmentation_type': [0, 1, 2], 'log_path': 'result\\2024-12-29_FewRel_daFalse_3_np20_ep1_5_ep2_5_seed2021_daType[0, 1, 2].txt'}
