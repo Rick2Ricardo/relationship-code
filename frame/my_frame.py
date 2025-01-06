@@ -72,10 +72,8 @@ class FrameWithTwoEncoders(object):
 
         return proto, features
 
-    def select_data_kmeans(self, args, encoder, sample_set):
-        """
-        使用 KMeans 来做选样（跟原先 select_data 类似）。
-        """
+    # Use K-Means to select what samples to save, similar to at_least = 0
+    def select_data(self, args, encoder, sample_set):
         data_loader = get_data_loader(args, sample_set, shuffle=False, drop_last=False, batch_size=1)
         features = []
         encoder.eval()
@@ -84,14 +82,11 @@ class FrameWithTwoEncoders(object):
             tokens = torch.stack([x.to(args.device) for x in tokens], dim=0)
             with torch.no_grad():
                 feature, rp = encoder.bert_forward(tokens)
-            features.append(feature.detach().cpu().numpy())
+            features.append(feature.detach().cpu())
 
-        features = np.concatenate(features, axis=0)
+        features = np.concatenate(features)
         num_clusters = min(args.num_protos, len(sample_set))
-        if num_clusters == 0:
-            return [], None, None
-
-        distances = KMeans(n_clusters=num_clusters, random_state=args.seed).fit_transform(features)
+        distances = KMeans(n_clusters=num_clusters, random_state=0).fit_transform(features)
 
         mem_set = []
         current_feat = []
@@ -103,7 +98,7 @@ class FrameWithTwoEncoders(object):
 
         current_feat = np.stack(current_feat, axis=0)
         current_feat = torch.from_numpy(current_feat)
-        return mem_set, current_feat, current_feat.mean(0, keepdim=True)
+        return mem_set, current_feat, current_feat.mean(0)
 
     
     # def select_data(self, args, encoder, sample_set):
