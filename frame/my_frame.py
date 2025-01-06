@@ -33,14 +33,13 @@ import logging
 logger = logging.getLogger(__name__)
 
 
-class Frame(object):
+class FrameWithTwoEncoders(object):
     def __init__(self, args):
         super().__init__()
         self.lbs = []
         self.id2rel = None
         self.rel2id = None
 
-        # setup logging
         logging.basicConfig(
             format="%(asctime)s - %(levelname)s - %(name)s -   %(message)s",
             datefmt="%m/%d/%Y %H:%M:%S",
@@ -48,6 +47,10 @@ class Frame(object):
         )
         logger.setLevel(logging.INFO)
         logger.info('log_path: ' + args.log_path)
+
+        # 实例化两个 encoder
+        self.encoderA = Encoder(args).to(args.device)  # 用 KMeans 做选样
+        self.encoderB = Encoder(args).to(args.device)  # 用 Spectral 做选样
 
     def get_proto(self, args, encoder, mem_set):
         # aggregate the prototype set for further use.
@@ -69,8 +72,10 @@ class Frame(object):
 
         return proto, features
 
-    # Use K-Means to select what samples to save, similar to at_least = 0
-    def select_data(self, args, encoder, sample_set):
+    def select_data_kmeans(self, args, encoder, sample_set):
+        """
+        使用 KMeans 来做选样（跟原先 select_data 类似）。
+        """
         data_loader = get_data_loader(args, sample_set, shuffle=False, drop_last=False, batch_size=1)
         features = []
         encoder.eval()
@@ -79,11 +84,14 @@ class Frame(object):
             tokens = torch.stack([x.to(args.device) for x in tokens], dim=0)
             with torch.no_grad():
                 feature, rp = encoder.bert_forward(tokens)
-            features.append(feature.detach().cpu())
+            features.append(feature.detach().cpu().numpy())
 
-        features = np.concatenate(features)
+        features = np.concatenate(features, axis=0)
         num_clusters = min(args.num_protos, len(sample_set))
-        distances = KMeans(n_clusters=num_clusters, random_state=0).fit_transform(features)
+        if num_clusters == 0:
+            return [], None, None
+
+        distances = KMeans(n_clusters=num_clusters, random_state=args.seed).fit_transform(features)
 
         mem_set = []
         current_feat = []
@@ -95,100 +103,8 @@ class Frame(object):
 
         current_feat = np.stack(current_feat, axis=0)
         current_feat = torch.from_numpy(current_feat)
-        return mem_set, current_feat, current_feat.mean(0)
-    
-    # def select_data(self, args, encoder, sample_set):
-    #     data_loader = get_data_loader(args, sample_set, shuffle=False, drop_last=False, batch_size=1)
-    #     features = []
-    #     encoder.eval()
-        
-    #     # Extract features
-    #     for step, batch_data in enumerate(data_loader):
-    #         labels, tokens, ind = batch_data
-    #         tokens = torch.stack([x.to(args.device) for x in tokens], dim=0)
-    #         with torch.no_grad():
-    #             feature, rp = encoder.bert_forward(tokens)
-    #         features.append(feature.detach().cpu())
-        
-    #     # Combine features into a single numpy array
-    #     features = np.concatenate(features)
-        
-    #     # Set the number of clusters
-    #     num_clusters = min(args.num_protos, len(sample_set))
-        
-    #     # Use MiniBatchKMeans for clustering
-    #     kmeans = MiniBatchKMeans(n_clusters=num_clusters, random_state=0, batch_size=32)
-    #     kmeans.fit(features)
-    #     distances = kmeans.transform(features)
-        
-    #     # Select representative samples
-    #     mem_set = []
-    #     current_feat = []
-    #     for k in range(num_clusters):
-    #         sel_index = np.argmin(distances[:, k])  # Find the closest sample to the cluster center
-    #         instance = sample_set[sel_index]
-    #         mem_set.append(instance)
-    #         current_feat.append(features[sel_index])
-        
-    #     # Convert selected features to torch tensor
-    #     current_feat = np.stack(current_feat, axis=0)
-    #     current_feat = torch.from_numpy(current_feat)
-        
-    #     return mem_set, current_feat, current_feat.mean(0)
-    
-    
-    # # AffinityPropagation爆栈
-    # def select_data(self, args, encoder, sample_set):
-    #     # 1) 构建 DataLoader
-    #     data_loader = get_data_loader(args, sample_set, shuffle=False, drop_last=False, batch_size=1)
-    #     features = []
-    #     encoder.eval()
+        return mem_set, current_feat, current_feat.mean(0, keepdim=True)
 
-    #     # 2) 逐样本计算特征
-    #     for step, batch_data in enumerate(data_loader):
-    #         labels, tokens, ind = batch_data
-    #         tokens = torch.stack([x.to(args.device) for x in tokens], dim=0)
-
-    #         with torch.no_grad():
-    #             feature, rp = encoder.bert_forward(tokens)
-
-    #         features.append(feature.detach().cpu().numpy())
-
-    #     # 3) 合并所有样本的特征
-    #     features = np.concatenate(features, axis=0)
-
-    #     # 4) 使用 AffinityPropagation 进行聚类
-    #     try:
-    #         aff_prop = AffinityPropagation(preference=-50, random_state=0).fit(features)
-    #         cluster_centers_indices = aff_prop.cluster_centers_indices_
-    #         labels = aff_prop.labels_
-    #     except Exception as e:
-    #         print(f"AffinityPropagation failed: {e}")
-    #         return [], torch.tensor([]), torch.tensor([])
-
-    #     # 检查是否成功生成簇中心
-    #     if cluster_centers_indices is None or len(cluster_centers_indices) == 0:
-    #         print("AffinityPropagation did not converge or found no clusters.")
-    #         return [], torch.tensor([]), torch.tensor([])
-
-    #     mem_set = []
-    #     current_feat = []
-
-    #     # 5) 遍历每个簇的中心点索引
-    #     for center_idx in cluster_centers_indices:
-    #         mem_set.append(sample_set[center_idx])
-    #         current_feat.append(features[center_idx])
-
-    #     # 6) 转成 torch.tensor 方便后续处理
-    #     current_feat = np.stack(current_feat, axis=0)
-    #     current_feat = torch.from_numpy(current_feat)
-
-    #     # 7) 返回：
-    #     #    (a) mem_set: 选出来的簇中心样本
-    #     #    (b) current_feat: 每个中心对应的特征向量
-    #     #    (c) 这些中心特征的均值，便于后续使用
-    #     return mem_set, current_feat, current_feat.mean(0)
-    
     
     # def select_data(self, args, encoder, sample_set):
     #     # 1) 构建 DataLoader
@@ -244,85 +160,7 @@ class Frame(object):
     #     # 7) 返回
     #     return mem_set, current_feat, current_feat.mean(0)
     
-    # # Use AgglomerativeClustering to select what samples to save, similar to at_least = 0
-    # def select_data(self, args, encoder, sample_set):
-    #     data_loader = get_data_loader(args, sample_set, shuffle=False, drop_last=False, batch_size=1)
-    #     features = []
-    #     encoder.eval()
-    #     for step, batch_data in enumerate(data_loader):
-    #         labels, tokens, ind = batch_data
-    #         tokens = torch.stack([x.to(args.device) for x in tokens], dim=0)
-    #         with torch.no_grad():
-    #             feature, rp = encoder.bert_forward(tokens)
-    #         features.append(feature.detach().cpu())
-
-    #     features = np.concatenate(features)
-    #     num_clusters = min(args.num_protos, len(sample_set))
-
-    #     # Perform Agglomerative Clustering
-    #     clustering = AgglomerativeClustering(n_clusters=num_clusters, linkage='ward')
-    #     cluster_labels = clustering.fit_predict(features)
-
-    #     mem_set = []
-    #     current_feat = []
-
-    #     # Compute the representative instance for each cluster
-    #     for k in range(num_clusters):
-    #         cluster_indices = np.where(cluster_labels == k)[0]
-    #         cluster_features = features[cluster_indices]
-            
-    #         # Compute the cluster center
-    #         cluster_center = cluster_features.mean(axis=0)
-            
-    #         # Find the closest point to the cluster center
-    #         distances_to_center = cdist([cluster_center], cluster_features, metric='euclidean').flatten()
-    #         sel_index = cluster_indices[np.argmin(distances_to_center)]
-            
-    #         instance = sample_set[sel_index]
-    #         mem_set.append(instance)
-    #         current_feat.append(features[sel_index])
-
-    #     current_feat = np.stack(current_feat, axis=0)
-    #     current_feat = torch.from_numpy(current_feat)
-    #     return mem_set, current_feat, current_feat.mean(0)
-    
-    # Use DBSCAN to select what samples to save, similar to at_least = 0
-    # def select_data(self, args, encoder, sample_set):
-    #     data_loader = get_data_loader(args, sample_set, shuffle=False, drop_last=False, batch_size=1)
-    #     features = []
-    #     encoder.eval()
-    #     for step, batch_data in enumerate(data_loader):
-    #         labels, tokens, ind = batch_data
-    #         tokens = torch.stack([x.to(args.device) for x in tokens], dim=0)
-    #         with torch.no_grad():
-    #             feature, rp = encoder.bert_forward(tokens)
-    #         features.append(feature.detach().cpu())
-
-    #     features = np.concatenate(features)
-        
-    #     # DBSCAN clustering
-    #     dbscan = DBSCAN(eps=args.dbscan_eps, min_samples=args.dbscan_min_samples)
-    #     cluster_labels = dbscan.fit_predict(features)
-        
-    #     mem_set = []
-    #     current_feat = []
-    #     unique_clusters = set(cluster_labels)
-    #     unique_clusters.discard(-1)  # Discard noise points
-        
-    #     for cluster in unique_clusters:
-    #         cluster_indices = np.where(cluster_labels == cluster)[0]
-    #         # Select the sample closest to the cluster center
-    #         cluster_features = features[cluster_indices]
-    #         cluster_center = cluster_features.mean(axis=0)
-    #         distances = np.linalg.norm(cluster_features - cluster_center, axis=1)
-    #         sel_index = cluster_indices[np.argmin(distances)]
-    #         instance = sample_set[sel_index]
-    #         mem_set.append(instance)
-    #         current_feat.append(features[sel_index])
-
-    #     current_feat = np.stack(current_feat, axis=0)
-    #     current_feat = torch.from_numpy(current_feat)
-    #     return mem_set, current_feat, current_feat.mean(0)
+   
     
     def get_optimizer(self, args, encoder):
         print('Use {} optim!'.format(args.optim))
