@@ -68,7 +68,7 @@ def all_param(parser: argparse.ArgumentParser):
     parser.add_argument("--data_path", default='dataset/', type=str)
 
     # bert-base-uncased weights path
-    parser.add_argument("--bert_path", default="H:\\2024-winter\\relationship\\relationship_code\\bert-base-uncased", type=str)
+    parser.add_argument("--bert_path", default="H:\\2024-winter\\relationship\\realtionship-code\\bert-base-uncased", type=str)
 
     # Data Augmentation
     parser.add_argument("--data_augmentation", default=False, type=bool)
